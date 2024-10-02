@@ -1,16 +1,16 @@
 const express = require("express");
-const app = express();
+const pool = require("./db");
+const userRoutes = require("./routes/user-routes");
 
-// Middleware pour permettre de parser les données JSON dans les requêtes
+const app = express();
+const port = 3000;
+
+// Middleware pour traiter les requêtes en JSON
 app.use(express.json());
 
-// Définir une route simple
-app.get("/", (req, res) => {
-  res.send("Bienvenue sur mon API Node.js!");
-});
+// Définir les routes
+app.use("/api/users", userRoutes);
 
-// Lancer le serveur
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Le serveur est démarré sur le port ${PORT}`);
+app.listen(port, () => {
+  console.log(`API running on port ${port}`);
 });
