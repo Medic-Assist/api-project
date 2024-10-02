@@ -23,6 +23,6 @@ services:
       - "5432:5432"
     volumes:
       - postgres-data:/var/lib/postgresql/data
-
+      - ./db:/docker-entrypoint-initdb.d  # Monte le répertoire des scripts SQL
 volumes:
   postgres-data:
