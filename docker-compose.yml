@@ -3,15 +3,15 @@ services:
   api:
     build: .
     volumes:
-      - .:/usr/src/app
+      - .:/usr/src/app # Montre le répertoire local dans le conteneur
+      - /usr/src/app/node_modules # Exclure node_modules du volume
     ports:
       - "3000:3000"
     depends_on:
       - db
-    env_file:
-      - .env
-    links:
-      - db
+    command: npm run dev # Utilise le script nodemon pour démarrer
+    environment:
+      - NODE_ENV=development
 
   db:
     image: postgres:latest

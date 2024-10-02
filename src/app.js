@@ -13,6 +13,9 @@ app.use("/api/users", userRoutes);
 app.get("/", (req, res) => {
   res.send("Hello World!");
 });
+app.get("/api", (req, res) => {
+  res.send("Hello World API!");
+});
 app.listen(port, () => {
   console.log(`API running on port ${port}`);
 });

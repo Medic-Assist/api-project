@@ -4,17 +4,17 @@ FROM node:16
 # Crée un répertoire de travail pour l'application
 WORKDIR /usr/src/app
 
-# Copie les fichiers package.json et package-lock.json (si présent)
+# Copier les fichiers package.json et package-lock.json (si présent)
 COPY package*.json ./
 
-# Installe les dépendances de l'application
+# Installer les dépendances de l'application (y compris nodemon localement)
 RUN npm install
 
-# Copie le reste du code de l'application
+# Copier le reste du code de l'application
 COPY . .
 
-# Expose le port que l'application utilise
+# Exposer le port de l'application
 EXPOSE 3000
 
-# Commande pour démarrer l'application
-CMD [ "node", "src/app.js" ]
+# Utiliser nodemon pour démarrer l'application
+ENTRYPOINT ["npx", "nodemon", "/usr/src/app/app.js"]
