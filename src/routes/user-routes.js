@@ -5,7 +5,7 @@ const pool = require("../db");
 // Obtenir tous les utilisateurs
 router.get("/", async (req, res) => {
   try {
-    const result = await pool.query("SELECT * FROM users");
+    const result = await pool.query("SELECT * FROM Utilisateur");
     res.json(result.rows);
   } catch (err) {
     console.error(err.message);
@@ -18,7 +18,7 @@ router.post("/", async (req, res) => {
   try {
     const { name, email } = req.body;
     const newUser = await pool.query(
-      "INSERT INTO users (name, email) VALUES ($1, $2) RETURNING *",
+      "INSERT INTO Utilisateur (name, email) VALUES ($1, $2) RETURNING *",
       [name, email]
     );
     res.json(newUser.rows[0]);
@@ -32,7 +32,7 @@ router.post("/", async (req, res) => {
 router.get("/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    const user = await pool.query("SELECT * FROM users WHERE id = $1", [id]);
+    const user = await pool.query("SELECT * FROM Utilisateur WHERE id = $1", [id]);
     if (user.rows.length === 0) {
       return res.status(404).send("User not found");
     }
@@ -48,7 +48,7 @@ router.put("/:id", async (req, res) => {
   try {
     const { id } = req.params;
     const { name, email } = req.body;
-    await pool.query("UPDATE users SET name = $1, email = $2 WHERE id = $3", [
+    await pool.query("UPDATE Utilisateur SET name = $1, email = $2 WHERE id = $3", [
       name,
       email,
       id,
@@ -64,7 +64,7 @@ router.put("/:id", async (req, res) => {
 router.delete("/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    await pool.query("DELETE FROM users WHERE id = $1", [id]);
+    await pool.query("DELETE FROM Utilisateur WHERE id = $1", [id]);
     res.send("User deleted");
   } catch (err) {
     console.error(err.message);
