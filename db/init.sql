@@ -80,6 +80,20 @@ CREATE TABLE IF NOT EXISTS Proche_Patient (
   FOREIGN KEY (idProche) REFERENCES Proche(idUser) ON DELETE CASCADE
 );
 
+CREATE TABLE IF NOT EXISTS StatusTrajet (
+  idStatus INT,
+  idRdv INT,
+  EstParti BOOLEAN,
+  PartiA DateTime,
+  RetardPossible BOOLEAN,
+  Raisin VARCHAR(250),
+  EstimationRetard Time,
+  AnnulationRDV BOOLEAN,
+  PRIMARY KEY (idStatus),
+  FOREIGN KEY (idRDV) REFERENCES RDV(idRDV) ON DELETE CASCADE,
+);
+
+
 
 -- Insertion des centres médicaux
 INSERT INTO CentreMedical (nom, adresse, codePostal, ville) VALUES

@@ -88,4 +88,19 @@ router.delete("/:idRDV", async (req, res) => {
   }
 });
 
+// Obtenir le personnel médical référent à mon RDV par idRDV
+router.get("/personnelMed/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const user = await pool.query("SELECT PM.idUser, U.prenom, U.nom FROM RDV  LEFT JOIN PersonnelMed PM ON PM.idCentreMed = RDV.idCentreMed LEFT JOIN Utilisateur U ON U.idUser = PM.idUser WHERE RDV.idRDV = $1", [id]);
+    if (user.rows.length === 0) {
+      return res.status(404).send("Aucun personnel médical trouvé");
+    }
+    res.json(user.rows[0]);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send("Server error");
+  }
+});
+
 module.exports = router;
