@@ -95,7 +95,7 @@ router.get("/:id", async (req, res) => {
     if (user.rows.length === 0) {
       return res.status(404).send("User not found");
     }
-    res.json(user.rows[0]);
+    res.json(user.rows);
   } catch (err) {
     console.error(err.message);
     res.status(500).send("Server error");
@@ -152,11 +152,11 @@ router.get("/personnelMed/:id", async (req, res) => {
 router.get("/proches_patient/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    const user = await pool.query("SELECT * FROM Proche Pro JOIN Utilisateur U ON U.idUser = Pro.idUser JOIN Proche_Patient PP ON PP.idPatient =  $1", [id]);
+    const user = await pool.query("SELECT * FROM Proche_Patient PP JOIN Proche Pro ON Pro.idUser = PP.idProche JOIN Utilisateur U ON U.idUser = Pro.idUser WHERE PP.idPatient = $1", [id]);
     if (user.rows.length === 0) {
       return res.status(404).send("Aucun proche trouvé");
     }
-    res.json(user.rows[0]);
+    res.json(user.rows);
   } catch (err) {
     console.error(err.message);
     res.status(500).send("Server error");
@@ -167,11 +167,11 @@ router.get("/proches_patient/:id", async (req, res) => {
 router.get("/patients_proche/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    const user = await pool.query("SELECT * FROM Utilisateur U JOIN Patient Pa ON PA.idUser = U.idUser JOIN Proche_Patient PP ON PP.idProche = $1", [id]);
+    const user = await pool.query("SELECT * FROM Proche_Patient PP JOIN Patient Pa ON Pa.idUser = PP.idPatient JOIN Utilisateur U ON U.idUser = Pa.idUser WHERE PP.idProche = $1", [id]);
     if (user.rows.length === 0) {
       return res.status(404).send("Aucun patient trouvé.");
     }
-    res.json(user.rows[0]);
+    res.json(user.rows);
   } catch (err) {
     console.error(err.message);
     res.status(500).send("Server error");

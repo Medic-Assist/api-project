@@ -36,7 +36,7 @@ router.get("/:id", async (req, res) => {
     if (user.rows.length === 0) {
       return res.status(404).send("Aucun personnel médical trouvé pour ce centre.");
     }
-    res.json(user.rows[0]);
+    res.json(user.rows);
   } catch (err) {
     console.error(err.message);
     res.status(500).send("Server error");
