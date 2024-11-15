@@ -42,7 +42,7 @@ CREATE TABLE IF NOT EXISTS Patient (
 
 CREATE TABLE IF NOT EXISTS Proche (
   idUser SERIAL PRIMARY KEY,
-  numero_rue VARCHAR(10) NOT NULL,
+  numero_rue VARCHAR(10),
   rue VARCHAR(255),
   codePostal INT, 
   ville VARCHAR(255),
@@ -134,39 +134,39 @@ INSERT INTO Patient (idUser, numero_rue_principal,rue_principale, codePostal_pri
 VALUES (1, '5' ,'Rue des Tulipes', 67600, 'Sélestat');
 
 -- Pour Bob (idUser 2) : Rendez-vous à Saint-Dié-des-Vosges (Centre 2)
-INSERT INTO Patient (idUser, adresse_principale, codePostal_principal, ville_principale) 
+INSERT INTO Patient (idUser, numero_rue_principal, rue_principale, codePostal_principal, ville_principale) 
 VALUES (2, '7', 'Rue Gambetta', 88100, 'Saint-Dié-des-Vosges');
 
 -- Pour Claire (idUser 3) : Rendez-vous à Schirmeck (Centre 4) et Strasbourg (Centre 6)
-INSERT INTO Patient (idUser, adresse_principale, codePostal_principal, ville_principale) 
+INSERT INTO Patient (idUser, numero_rue_principal, rue_principale, codePostal_principal, ville_principale) 
 VALUES (3, '3' ,'Place du Marché', 67130, 'Schirmeck');
 
 -- Pour David (idUser 4) : Rendez-vous à Saint-Dié-des-Vosges (Centre 2) et Schirmeck (Centre 4)
-INSERT INTO Patient (idUser, adresse_principale, codePostal_principal, ville_principale) 
+INSERT INTO Patient (idUser, numero_rue_principal, rue_principale, codePostal_principal, ville_principale) 
 VALUES (4, '8', 'Rue des Jardins', 88480, 'Étival-Clairefontaine');
 
 -- Pour Eve (idUser 5) : Rendez-vous à Strasbourg (Centre 5)
-INSERT INTO Patient (idUser, adresse_principale, codePostal_principal, ville_principale) 
+INSERT INTO Patient (idUser, numero_rue_principal, rue_principale, codePostal_principal, ville_principale) 
 VALUES (5, '12' ,'Rue de la Poste', 67120, 'Molsheim');
 
 -- Pour Frank (idUser 6) : Rendez-vous à Strasbourg (Centre 6)
-INSERT INTO Patient (idUser, adresse_principale, codePostal_principal, ville_principale) 
+INSERT INTO Patient (idUser, numero_rue_principal, rue_principale, codePostal_principal, ville_principale) 
 VALUES (6, '9', 'Rue de la Gare', 67240, 'Bischwiller');
 
 -- Pour Grace (idUser 7) : Rendez-vous à Sélestat (Centre 7)
-INSERT INTO Patient (idUser, adresse_principale, codePostal_principal, ville_principale) 
+INSERT INTO Patient (idUser, numero_rue_principal, rue_principale, codePostal_principal, ville_principale) 
 VALUES (7, '14', 'Rue des Tilleuls', 67390, 'Marckolsheim');
 
 -- Pour Hugo (idUser 8) : Rendez-vous à Strasbourg (Centre 1)
-INSERT INTO Patient (idUser, adresse_principale, codePostal_principal, ville_principale) 
+INSERT INTO Patient (idUser, numero_rue_principal, rue_principale, codePostal_principal, ville_principale) 
 VALUES (8, '17', 'Rue de la Liberté', 67240, 'Oberhoffen-sur-Moder');
 
 -- Pour Isabelle (idUser 9) : Rendez-vous à Strasbourg (Centre 5)
-INSERT INTO Patient (idUser, adresse_principale, codePostal_principal, ville_principale) 
+INSERT INTO Patient (idUser, numero_rue_principal, rue_principale, codePostal_principal, ville_principale) 
 VALUES (9, '22', 'Rue des Vosges', 67100, 'Strasbourg');
 
 -- Pour Jack (idUser 10) : Rendez-vous à Sélestat (Centre 7)
-INSERT INTO Patient (idUser, adresse_principale, codePostal_principal, ville_principale) 
+INSERT INTO Patient (idUser, numero_rue_principal, rue_principale, codePostal_principal, ville_principale) 
 VALUES (10, '20', 'Rue de la Forêt', 67600, 'Sélestat');
 
 
