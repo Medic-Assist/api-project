@@ -31,10 +31,10 @@ router.post("/", async (req, res) => {
 // Ajouter un Patient
 router.post("/patient", async (req, res) => {
   try {
-    const { idUser, adresse_principale, codePostal_principal, ville_principale } = req.body;
+    const { idUser,numero_rue_principal, rue_principale, codePostal_principal, ville_principale } = req.body;
     const newUser = await pool.query(
-      "INSERT INTO Patient (idUser, adresse_principale, codePostal_principal, ville_principale) VALUES ($1, $2, $3, $4) RETURNING *",
-      [idUser, adresse_principale, codePostal_principal, ville_principale]
+      "INSERT INTO Patient (idUser,  numero_rue_principal,rue_principale,  codePostal_principal, ville_principale) VALUES ($1, $2, $3, $4,$5) RETURNING *",
+      [idUser, numero_rue_principal,rue_principale, codePostal_principal, ville_principale]
     );
     res.json(newUser.rows[0]);
   } catch (err) {
@@ -45,10 +45,10 @@ router.post("/patient", async (req, res) => {
 // Ajouter un Proche
 router.post("/proche", async (req, res) => {
   try {
-    const { idUser,adresse,codePostal,ville } = req.body;
+    const { idUser,numero_rue, rue,codePostal,ville } = req.body;
     const newUser = await pool.query(
-      "INSERT INTO Proche (idUser,adresse,codePostal,ville) VALUES ($1, $2, $3, $4) RETURNING *",
-      [idUser,adresse,codePostal,ville]
+      "INSERT INTO Proche (idUser,numero_rue, rue,codePostal,ville) VALUES ($1, $2, $3, $4,$5) RETURNING *",
+      [idUser,numero_rue, rue,codePostal,ville]
     );
     res.json(newUser.rows[0]);
   } catch (err) {
@@ -199,10 +199,10 @@ router.put("/nom/:id", async (req, res) => {
 router.put("/adresseTMP/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    const { newAdresse, newCP, newVille } = req.body;
-    await pool.query("UPDATE Patient SET adresse_temporaire = $1,codePostal_temporaire = $2,ville_temporaire = $3 WHERE idUser = $4"+
-      "UPDATE RDV SET isADRPrincipal = FALSE WHERE dateRDV = CURDATE() AND idUser = $4", [
-      newAdresse, newCP, newVille,
+    const { newNumero,newRue, newCP, newVille } = req.body;
+    await pool.query("UPDATE Patient SET numero_rue_temporaire=$1, rue_temporaire = $2,codePostal_temporaire = $3,ville_temporaire = $4 WHERE idUser = $5"+
+      "UPDATE RDV SET isADRPrincipal = FALSE WHERE dateRDV = CURDATE() AND idUser = $5", [
+        newNumero,newRue, newCP, newVille,
       id,
     ]);
     res.send("User updated");

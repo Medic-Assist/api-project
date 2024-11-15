@@ -16,10 +16,10 @@ router.get("/", async (req, res) => {
 // Ajouter un centre médical
 router.post("/", async (req, res) => {
   try {
-    const { nom, adresse, codePostal, ville } = req.body;
+    const { nom, numero_rue, rue, codePostal, ville } = req.body;
     const newCM = await pool.query(
-      "INSERT INTO CentreMedical (nom, adresse, codePostal, ville) VALUES ($1, $2, $3, $4) RETURNING *",
-      [nom, adresse, codePostal, ville]
+      "INSERT INTO CentreMedical (nom, numero_rue, rue, codePostal, ville) VALUES ($1, $2, $3, $4, $5) RETURNING *",
+      [nom, numero_rue, rue, codePostal, ville]
     );
     res.json(newCM.rows[0]);
   } catch (err) {
@@ -47,13 +47,45 @@ router.get("/:id", async (req, res) => {
 router.put("/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, email } = req.body;
-    await pool.query("UPDATE Utilisateur SET name = $1, email = $2 WHERE id = $3", [
-      name,
-      email,
+    const { Prenom, nom, role, numero_tel } = req.body;
+    await pool.query("UPDATE Utilisateur SET Prenom=$1, nom=$2, role=$3, numero_tel=$4 WHERE idUser = $5", [
+      Prenom, nom, role, numero_tel,
       id,
     ]);
-    res.send("User updated");
+    res.send("Utilisateur modifé.");
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send("Server error");
+  }
+});
+
+// Mettre à jour un patient
+router.put("/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { numero_rue_principal,rue_principale, codePostal_principal, ville_principale } = req.body;
+    await pool.query("UPDATE Patient SET numero_rue_principal=$1,rue_principale=$2, codePostal_principal=$3, ville_principale=$4 WHERE idUser = $5", [
+      numero_rue_principal,rue_principale, codePostal_principal, ville_principale,
+      id,
+    ]);
+    res.send("Patient modifié.");
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send("Server error");
+  }
+});
+
+
+// Mettre à jour un personnel med
+router.put("/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { idCentreMed } = req.body;
+    await pool.query("UPDATE PersonnelMed SET idCentreMed=$1 WHERE idUser = $2", [
+      idCentreMed,
+      id,
+    ]);
+    res.send("Personnel Médecin modifié.");
   } catch (err) {
     console.error(err.message);
     res.status(500).send("Server error");
