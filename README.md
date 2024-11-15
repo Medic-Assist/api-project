@@ -37,6 +37,12 @@ La base de données est accessible à l'adresse suivante : http://localhost:5432
 
 ### Commandes utiles
 
+- Pour supprimer avec les volumes (pratique quand les choses ne marchent pas correctement sans raison) : 
+
+```bash
+docker-compose down -v
+```
+
 - Pour lancer l'image docker : 
 
 ```bash
@@ -83,12 +89,6 @@ docker rm <container_id>
 
 ```bash
 docker rmi <image_id>
-```
-
-- Pour supprimer avec les volumes (pratique quand les choses ne marchent pas correctement sans raison) : 
-
-```bash
-docker-compose down -v
 ```
 
 
