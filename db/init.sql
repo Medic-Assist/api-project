@@ -33,7 +33,7 @@ CREATE TABLE IF NOT EXISTS Patient (
   rue_principale VARCHAR(255) NOT NULL,
   codePostal_principal INT NOT NULL, 
   ville_principale VARCHAR(255) NOT NULL,
-  numero_rue_temporaire INT NOT NULL,-- a n'utiliser si jamais on ne part pas du lieu habituel
+  numero_rue_temporaire INT,-- a n'utiliser si jamais on ne part pas du lieu habituel
   rue_temporaire VARCHAR(255), 
   codePostal_temporaire INT ,
   ville_temporaire VARCHAR(255) ,
@@ -82,13 +82,13 @@ CREATE TABLE IF NOT EXISTS StatusTrajet (
   idStatus INT,
   idRdv INT,
   EstParti BOOLEAN,
-  PartiA DateTime,
+  PartiA TIMESTAMP,
   RetardPossible BOOLEAN,
   Raison VARCHAR(250),
-  EstimationRetard Time,
+  EstimationRetard TIME,
   AnnulationRDV BOOLEAN,
   PRIMARY KEY (idStatus),
-  FOREIGN KEY (idRDV) REFERENCES RDV(idRDV) ON DELETE CASCADE,
+  FOREIGN KEY (idRDV) REFERENCES RDV(idRDV) ON DELETE CASCADE
 );
 
 
