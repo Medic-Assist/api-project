@@ -222,6 +222,36 @@ router.delete("/:id", async (req, res) => {
     console.error(err.message);
     res.status(500).send("Server error");
   }
+
+
+  // Obtenir un utilisateur par email
+router.get("/email/:email", async (req, res) => {
+  try {
+    const { email } = req.params;
+    const user = await pool.query("SELECT * FROM Utilisateur WHERE email = $1", [email]);
+    if (user.rows.length === 0) {
+      return res.status(404).send("User not found");
+    }
+    res.json(user.rows[0]);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send("Server error");
+  }
+});
+
+// Ajouter un mapping UserRainbow
+router.post("/user_rainbow", async (req, res) => {
+  try {
+    const { idRainbow, idUser } = req.body;
+    const newUserRainbow = await pool.query(
+      "INSERT INTO userrainbow (idRainbow, idUser) VALUES ($1, $2) RETURNING *",
+      [idRainbow, idUser]
+    );
+    res.json(newUserRainbow.rows[0]);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send("Server error");
+  }
 });
 
 module.exports = router;
