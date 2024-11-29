@@ -86,7 +86,7 @@ CREATE TABLE IF NOT EXISTS EtatRDV (
 CREATE TABLE IF NOT EXISTS StatusTrajet (
   idStatus INT,
   idRdv INT,
-  etatRDV EtatRDV,
+  etatRDV int,
   PartiA TIMESTAMP,
   Raison VARCHAR(250),
   EstimationRetard TIME,
