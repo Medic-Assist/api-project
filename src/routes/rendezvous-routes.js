@@ -103,4 +103,19 @@ router.get("/personnelMed/:id", async (req, res) => {
   }
 });
 
+// Obtenir le personnel médical référent à mon RDV par idRDV
+router.get("/etatsRdv", async (req, res) => {
+  try {
+    
+    const user = await pool.query("SELECT * FROM EtatRDV", );
+    if (user.rows.length === 0) {
+      return res.status(404).send("Aucun etat de RDV trouvé");
+    }
+    res.json(user.rows);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send("Server error");
+  }
+});
+
 module.exports = router;

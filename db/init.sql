@@ -78,19 +78,21 @@ CREATE TABLE IF NOT EXISTS Proche_Patient (
   FOREIGN KEY (idProche) REFERENCES Proche(idUser) ON DELETE CASCADE
 );
 
+CREATE TABLE IF NOT EXISTS EtatRDV (
+    idEtat SERIAL PRIMARY KEY,
+    intitule VARCHAR(100)
+);
+
 CREATE TABLE IF NOT EXISTS StatusTrajet (
   idStatus INT,
   idRdv INT,
-  EstParti BOOLEAN,
+  etatRDV EtatRDV,
   PartiA TIMESTAMP,
-  RetardPossible BOOLEAN,
   Raison VARCHAR(250),
   EstimationRetard TIME,
-  AnnulationRDV BOOLEAN,
   PRIMARY KEY (idStatus),
   FOREIGN KEY (idRDV) REFERENCES RDV(idRDV) ON DELETE CASCADE
 );
-
 
 
 -- Insertion des centres médicaux
@@ -228,3 +230,11 @@ INSERT INTO RDV (intitule, horaire, dateRDV, idUser, idCentreMed, isADRPrincipal
   
   -- Rendez-vous pour Jack
   ('Radio mâchoire','15:30:00', '2024-10-04', 10, 7, TRUE);
+
+-- Insertion des différents etat possible
+INSERT INTO EtatRDV(intitule) VALUES
+('Retard du RDV Possible'),
+('Patient parti'),
+('Retard du patient possible'),
+('Patient arrivé au RDV'),
+('RDV annulé');
