@@ -84,13 +84,12 @@ CREATE TABLE IF NOT EXISTS EtatRDV (
 );
 
 CREATE TABLE IF NOT EXISTS StatusTrajet (
-  idStatus INT,
+  idStatus SERIAL PRIMARY KEY,
   idRdv INT,
   etatRDV int,
   PartiA TIMESTAMP,
   Raison VARCHAR(250),
   EstimationRetard TIME,
-  PRIMARY KEY (idStatus),
   FOREIGN KEY (idRDV) REFERENCES RDV(idRDV) ON DELETE CASCADE
 );
 
@@ -238,3 +237,10 @@ INSERT INTO EtatRDV(intitule) VALUES
 ('Retard du patient possible'),
 ('Patient arrivé au RDV'),
 ('RDV annulé');
+
+-- Insertion données d'info de status de trajet sur un rdv
+
+
+INSERT INTO StatusTrajet(idRdv, etatRDV, Raison) VALUES
+(1, 1,'Bouchon'),
+(3, 5, 'Urgence Personnel');

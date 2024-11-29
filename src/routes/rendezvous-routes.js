@@ -103,13 +103,28 @@ router.get("/personnelMed/:id", async (req, res) => {
   }
 });
 
-// Obtenir le personnel médical référent à mon RDV par idRDV
+// Obtenir les différents etats possible du Rdv
 router.get("/etatsRdv", async (req, res) => {
   try {
     
     const user = await pool.query("SELECT * FROM EtatRDV", );
     if (user.rows.length === 0) {
       return res.status(404).send("Aucun etat de RDV trouvé");
+    }
+    res.json(user.rows);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send("Server error");
+  }
+});
+
+// Obtenir les differents status enregistré pour un Rdv
+router.get("/statusTrajet/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const user = await pool.query("SELECT * FROM StatusTrajet WHERE idRdv= $1", [id]);
+    if (user.rows.length === 0) {
+      return res.status(404).send("Aucun status de trajet trouvé pour ce Rdv");
     }
     res.json(user.rows);
   } catch (err) {
