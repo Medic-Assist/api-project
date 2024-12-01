@@ -26,9 +26,12 @@ CREATE TABLE IF NOT EXISTS UserRainbow (
   FOREIGN KEY (idUser) REFERENCES Utilisateur(idUser) ON DELETE CASCADE
 );
 
+CREATE TYPE mode_transport AS ENUM ('Voiture', 'Taxi', 'Transports en commun', 'Vélo', 'Marche');
 
 CREATE TABLE IF NOT EXISTS Patient (
   idUser SERIAL PRIMARY KEY,
+  mail VARCHAR(250),
+  date_naissance DATE NOT NULL,
   numero_rue_principal VARCHAR(10) NOT NULL,
   rue_principale VARCHAR(255) NOT NULL,
   codePostal_principal INT NOT NULL, 
@@ -37,15 +40,13 @@ CREATE TABLE IF NOT EXISTS Patient (
   rue_temporaire VARCHAR(255), 
   codePostal_temporaire INT ,
   ville_temporaire VARCHAR(255) ,
+  modeTransport mode_transport DEFAULT 'Voiture',
   FOREIGN KEY (idUser) REFERENCES Utilisateur(idUser) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS Proche (
   idUser SERIAL PRIMARY KEY,
-  numero_rue VARCHAR(10),
-  rue VARCHAR(255),
-  codePostal INT, 
-  ville VARCHAR(255),
+  mail VARCHAR(250),
   FOREIGN KEY (idUser) REFERENCES Utilisateur(idUser) ON DELETE CASCADE
 );
 
@@ -131,44 +132,44 @@ INSERT INTO Utilisateur (Prenom, nom, role) VALUES
 
 -- Insertion des patients
 -- Pour Alice (idUser 1) : Rendez-vous à Sélestat (Centre 7) et Benfeld (Centre 3)
-INSERT INTO Patient (idUser, numero_rue_principal,rue_principale, codePostal_principal, ville_principale) 
-VALUES (1, '5' ,'Rue des Tulipes', 67600, 'Sélestat');
+INSERT INTO Patient (idUser,mail, date_naissance, numero_rue_principal,rue_principale, codePostal_principal, ville_principale,modeTransport) 
+VALUES (1,'alice.dupont@mail.com','1962-02-23', '5' ,'Rue des Tulipes', 67600, 'Sélestat','Transports en commun');
 
 -- Pour Bob (idUser 2) : Rendez-vous à Saint-Dié-des-Vosges (Centre 2)
-INSERT INTO Patient (idUser, numero_rue_principal, rue_principale, codePostal_principal, ville_principale) 
-VALUES (2, '7', 'Rue Gambetta', 88100, 'Saint-Dié-des-Vosges');
+INSERT INTO Patient (idUser,mail, date_naissance, numero_rue_principal, rue_principale, codePostal_principal, ville_principale,modeTransport) 
+VALUES (2,'bob.martin@mail.com','1955-06-18', '7', 'Rue Gambetta', 88100, 'Saint-Dié-des-Vosges','Taxi');
 
 -- Pour Claire (idUser 3) : Rendez-vous à Schirmeck (Centre 4) et Strasbourg (Centre 6)
-INSERT INTO Patient (idUser, numero_rue_principal, rue_principale, codePostal_principal, ville_principale) 
-VALUES (3, '3' ,'Place du Marché', 67130, 'Schirmeck');
+INSERT INTO Patient (idUser,mail, date_naissance, numero_rue_principal, rue_principale, codePostal_principal, ville_principale) 
+VALUES (3,'claire.lemoine@mail.com','1980-03-01', '3' ,'Place du Marché', 67130, 'Schirmeck');
 
 -- Pour David (idUser 4) : Rendez-vous à Saint-Dié-des-Vosges (Centre 2) et Schirmeck (Centre 4)
-INSERT INTO Patient (idUser, numero_rue_principal, rue_principale, codePostal_principal, ville_principale) 
-VALUES (4, '8', 'Rue des Jardins', 88480, 'Étival-Clairefontaine');
+INSERT INTO Patient (idUser,mail, date_naissance, numero_rue_principal, rue_principale, codePostal_principal, ville_principale) 
+VALUES (4,'david.durand@mail.com','1949-10-05', '8', 'Rue des Jardins', 88480, 'Étival-Clairefontaine');
 
 -- Pour Eve (idUser 5) : Rendez-vous à Strasbourg (Centre 5)
-INSERT INTO Patient (idUser, numero_rue_principal, rue_principale, codePostal_principal, ville_principale) 
-VALUES (5, '12' ,'Rue de la Poste', 67120, 'Molsheim');
+INSERT INTO Patient (idUser,mail, date_naissance, numero_rue_principal, rue_principale, codePostal_principal, ville_principale,modeTransport) 
+VALUES (5,'eve.moreau@mail.com','1952-08-16', '12' ,'Rue de la Poste', 67120, 'Molsheim','Voiture');
 
 -- Pour Frank (idUser 6) : Rendez-vous à Strasbourg (Centre 6)
-INSERT INTO Patient (idUser, numero_rue_principal, rue_principale, codePostal_principal, ville_principale) 
-VALUES (6, '9', 'Rue de la Gare', 67240, 'Bischwiller');
+INSERT INTO Patient (idUser, date_naissance, numero_rue_principal, rue_principale, codePostal_principal, ville_principale) 
+VALUES (6,'1940-01-25', '9', 'Rue de la Gare', 67240, 'Bischwiller');
 
 -- Pour Grace (idUser 7) : Rendez-vous à Sélestat (Centre 7)
-INSERT INTO Patient (idUser, numero_rue_principal, rue_principale, codePostal_principal, ville_principale) 
-VALUES (7, '14', 'Rue des Tilleuls', 67390, 'Marckolsheim');
+INSERT INTO Patient (idUser,mail, date_naissance, numero_rue_principal, rue_principale, codePostal_principal, ville_principale,modeTransport) 
+VALUES (7,'grace.kemberg@mail.com','1990-05-05', '14', 'Rue des Tilleuls', 67390, 'Marckolsheim','Vélo');
 
 -- Pour Hugo (idUser 8) : Rendez-vous à Strasbourg (Centre 1)
-INSERT INTO Patient (idUser, numero_rue_principal, rue_principale, codePostal_principal, ville_principale) 
-VALUES (8, '17', 'Rue de la Liberté', 67240, 'Oberhoffen-sur-Moder');
+INSERT INTO Patient (idUser,mail, date_naissance, numero_rue_principal, rue_principale, codePostal_principal, ville_principale) 
+VALUES (8,'hugo.blanc@mail.com','1973-11-19', '17', 'Rue de la Liberté', 67240, 'Oberhoffen-sur-Moder');
 
 -- Pour Isabelle (idUser 9) : Rendez-vous à Strasbourg (Centre 5)
-INSERT INTO Patient (idUser, numero_rue_principal, rue_principale, codePostal_principal, ville_principale) 
-VALUES (9, '22', 'Rue des Vosges', 67100, 'Strasbourg');
+INSERT INTO Patient (idUser,mail, date_naissance, numero_rue_principal, rue_principale, codePostal_principal, ville_principale,modeTransport) 
+VALUES (9,'isabelle.verde@mail.com','1951-09-20', '22', 'Rue des Vosges', 67100, 'Strasbourg','Taxi');
 
 -- Pour Jack (idUser 10) : Rendez-vous à Sélestat (Centre 7)
-INSERT INTO Patient (idUser, numero_rue_principal, rue_principale, codePostal_principal, ville_principale) 
-VALUES (10, '20', 'Rue de la Forêt', 67600, 'Sélestat');
+INSERT INTO Patient (idUser,mail, date_naissance, numero_rue_principal, rue_principale, codePostal_principal, ville_principale) 
+VALUES (10,'jack.rouge@mail.com','1939-04-21', '20', 'Rue de la Forêt', 67600, 'Sélestat');
 
 
 -- Insertion des proches dans la table Proche (en utilisant les idUser des proches)

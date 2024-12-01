@@ -13,20 +13,39 @@ router.get("/", async (req, res) => {
   }
 });
 
-// Ajouter un utilisateur
-router.post("/", async (req, res) => {
+// Obtenir tous les proches
+router.get("/proches", async (req, res) => {
   try {
-    const { Prenom, nom,role } = req.body;
-    const newUser = await pool.query(
-      "INSERT INTO Utilisateur (Prenom, nom, role) VALUES ($1, $2, $3) RETURNING *",
-      [Prenom, nom, role]
-    );
-    res.json(newUser.rows[0]);
+    const result = await pool.query("SELECT * FROM Utilisateur U INNER JOIN Proche P ON P.idUser=U.idUser");
+    res.json(result.rows);
   } catch (err) {
     console.error(err.message);
     res.status(500).send("Server error");
   }
 });
+
+// Ajouter un utilisateur
+router.post("/", async (req, res) => {
+  try {
+    const { prenom, nom, numero_tel, role } = req.body;
+
+    // Vérification des champs requis
+    if (!prenom || !nom || !numero_tel || !role) {
+      return res.status(400).send("Tous les champs requis doivent être remplis.");
+    }
+
+    const newUser = await pool.query(
+      "INSERT INTO Utilisateur (prenom, nom, numero_tel, role) VALUES ($1, $2, $3, $4) RETURNING *",
+      [prenom, nom, numero_tel, role]
+    );
+
+    res.json(newUser.rows[0]);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send("Erreur serveur : " + err.message);
+  }
+});
+
 
 // Ajouter un Patient
 router.post("/patient", async (req, res) => {
@@ -45,10 +64,10 @@ router.post("/patient", async (req, res) => {
 // Ajouter un Proche
 router.post("/proche", async (req, res) => {
   try {
-    const { idUser,numero_rue, rue,codePostal,ville } = req.body;
+    const { iduser,mail } = req.body;
     const newUser = await pool.query(
-      "INSERT INTO Proche (idUser,numero_rue, rue,codePostal,ville) VALUES ($1, $2, $3, $4,$5) RETURNING *",
-      [idUser,numero_rue, rue,codePostal,ville]
+      "INSERT INTO Proche (idUser,mail) VALUES ($1, $2) RETURNING *",
+      [iduser,mail]
     );
     res.json(newUser.rows[0]);
   } catch (err) {
@@ -88,6 +107,7 @@ router.post("/personnelMed", async (req, res) => {
 });
 
 // Obtenir un utilisateur par ID
+/*
 router.get("/:id", async (req, res) => {
   try {
     const { id } = req.params;
@@ -100,7 +120,7 @@ router.get("/:id", async (req, res) => {
     console.error(err.message);
     res.status(500).send("Server error");
   }
-});
+});*/
 
 // Obtenir un patient par ID
 router.get("/patient/:id", async (req, res) => {
@@ -178,6 +198,19 @@ router.get("/patients_proche/:id", async (req, res) => {
   }
 });
 
+// Obtenir tous les modes de transports disponibles
+router.get("/modes_transports", async (req, res) => {
+  try {
+    const modes = await pool.query("SELECT unnest(enum_range(NULL::mode_transport)) AS transport_mode");
+    res.json(modes.rows);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send("Server error");
+  }
+});
+
+
+
 
 //Mettre à jour les informations d'un utilisateur
 router.put("/nom/:id", async (req, res) => {
@@ -190,6 +223,81 @@ router.put("/nom/:id", async (req, res) => {
     ]);
     res.send("User updated");
   } catch (err) {
+    console.error(err.message);
+    res.status(500).send("Server error");
+  }
+});
+
+//Mettre à jour les informations d'un patient
+router.put("/patient/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { nom, prenom,numero_tel, mail, date_naissance, numero_rue_principal, rue_principale, codepostal_principal, ville_principale, modeTransport } = req.body;
+
+    // Commencer une transaction pour garantir que les deux mises à jour se fassent correctement
+    await pool.query('BEGIN');
+
+    // Mettre à jour l'utilisateur (nom, prénom et numero de tel)
+    await pool.query(
+      "UPDATE Utilisateur SET nom = $1, prenom = $2, numero_tel = $3 WHERE idUser = $4", 
+      [nom, prenom,numero_tel, id]
+    );
+
+    // Mettre à jour les informations du patient
+    await pool.query(
+      "UPDATE Patient SET mail = $1, date_naissance = $2, numero_rue_principal = $3, rue_principale = $4, codePostal_principal = $5, ville_principale = $6, modeTransport = $7 WHERE idUser = $8", 
+      [mail, date_naissance, numero_rue_principal, rue_principale, codepostal_principal, ville_principale, modeTransport, id]
+    );
+
+    // Si tout s'est bien passé, valider la transaction
+    await pool.query('COMMIT');
+  
+    res.send("Utilisateur et Patient mis à jour.");
+  } catch (err) {
+    // En cas d'erreur, annuler la transaction
+    await pool.query('ROLLBACK');
+    console.error(err.message);
+    res.status(500).send("Server error");
+  }
+});
+
+//Mettre à jour les informations d'un patient
+router.put("/proche/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { nom, prenom,numero_tel, mail } = req.body;
+
+    //Verification de l'existence du proche
+    const result = await pool.query("SELECT * FROM Proche WHERE idUser = $1", [id]);
+    if (result.rowCount === 0) {
+      return res.status(404).send("Proche not found");
+    }
+    // Commencer une transaction pour garantir que les deux mises à jour se fassent correctement
+    await pool.query('BEGIN');
+
+    // Mettre à jour l'utilisateur (nom, prénom et numero de tel)
+    await pool.query(
+      "UPDATE Utilisateur SET nom = $1, prenom = $2, numero_tel = $3 WHERE idUser = $4", 
+      [nom, prenom,numero_tel, id]
+    );
+
+    // Mettre à jour les informations du proche
+    await pool.query(
+      "UPDATE Proche SET mail = $1 WHERE idUser = $2", 
+      [mail, id]
+    );
+
+    // Si tout s'est bien passé, valider la transaction
+    await pool.query('COMMIT');
+    
+    res.send("Utilisateur et Proche mis à jour.");
+  } catch (err) {
+    // En cas d'erreur, annuler la transaction
+    try {
+      await pool.query('ROLLBACK');
+    } catch (rollbackErr) {
+      console.error("Erreur lors du rollback :", rollbackErr.message);
+    }
     console.error(err.message);
     res.status(500).send("Server error");
   }
@@ -218,6 +326,18 @@ router.delete("/:id", async (req, res) => {
     const { id } = req.params;
     await pool.query("DELETE FROM Utilisateur WHERE idUser = $1", [id]);
     res.send("User deleted");
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send("Server error");
+  }
+});
+
+// Supprimer un utilisateur
+router.delete("/proche/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    await pool.query("DELETE FROM Proche WHERE idUser = $1", [id]);
+    res.status(200).send("Proche supprimé avec succès.");
   } catch (err) {
     console.error(err.message);
     res.status(500).send("Server error");
