@@ -118,16 +118,16 @@ router.get("/etatsRdv", async (req, res) => {
   }
 });
 
-// Obtenir les differents status enregistré pour un Rdv
+// Obtenir les status pour un Rdv
 router.get("/statusTrajet/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    const user = await pool.query("SELECT * FROM StatusTrajet WHERE idRdv= $1", [id]);
+    const user = await pool.query("SELECT E.idEtat, E.intitule FROM StatusTrajet S JOIN EtatRDV E ON E.idEtat=S.etatRDV WHERE idRdv= $1", [id]);
     if (user.rows.length === 0) {
       return res.status(404).send("Aucun status de trajet trouvé pour ce Rdv");
     }
-    res.json(user.rows);
-  } catch (err) {
+    res.json(user.rows[0]);
+  } catch (err) {E
     console.error(err.message);
     res.status(500).send("Server error");
   }
