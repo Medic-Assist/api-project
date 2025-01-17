@@ -40,7 +40,7 @@ CREATE TABLE IF NOT EXISTS Patient (
   rue_temporaire VARCHAR(255), 
   codePostal_temporaire INT ,
   ville_temporaire VARCHAR(255) ,
-  modeTransport mode_transport DEFAULT 'Voiture',
+  modetransport mode_transport DEFAULT 'Voiture',
   FOREIGN KEY (idUser) REFERENCES Utilisateur(idUser) ON DELETE CASCADE
 );
 

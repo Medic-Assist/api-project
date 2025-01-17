@@ -232,7 +232,7 @@ router.put("/nom/:id", async (req, res) => {
 router.put("/patient/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    const { nom, prenom,numero_tel, mail, date_naissance, numero_rue_principal, rue_principale, codepostal_principal, ville_principale, modeTransport } = req.body;
+    const { nom, prenom,numero_tel, mail, date_naissance, numero_rue_principal, rue_principale, codepostal_principal, ville_principale, modetransport } = req.body;
 
     // Commencer une transaction pour garantir que les deux mises à jour se fassent correctement
     await pool.query('BEGIN');
@@ -242,11 +242,11 @@ router.put("/patient/:id", async (req, res) => {
       "UPDATE Utilisateur SET nom = $1, prenom = $2, numero_tel = $3 WHERE idUser = $4", 
       [nom, prenom,numero_tel, id]
     );
-
+    console.log(req)
     // Mettre à jour les informations du patient
     await pool.query(
-      "UPDATE Patient SET mail = $1, date_naissance = $2, numero_rue_principal = $3, rue_principale = $4, codePostal_principal = $5, ville_principale = $6, modeTransport = $7 WHERE idUser = $8", 
-      [mail, date_naissance, numero_rue_principal, rue_principale, codepostal_principal, ville_principale, modeTransport, id]
+      "UPDATE Patient SET mail = $1, date_naissance = $2, numero_rue_principal = $3, rue_principale = $4, codePostal_principal = $5, ville_principale = $6, modetransport = $7 WHERE idUser = $8", 
+      [mail, date_naissance, numero_rue_principal, rue_principale, codepostal_principal, ville_principale, modetransport, id]
     );
 
     // Si tout s'est bien passé, valider la transaction
