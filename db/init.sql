@@ -201,8 +201,8 @@ INSERT INTO RDV (intitule, horaire, dateRDV, idUser, idCentreMed, isADRPrincipal
   ('Osthéopathie','11:30:00', '2024-09-25', 1, 3, TRUE),
   
   -- Rendez-vous pour Bob
-  ('Dévitalisation Dent','14:30:00', '2024-09-21', 2, 2, TRUE),
-  ('Controle Dent dévitalisé','09:00:00', '2024-09-26', 2, 2, TRUE),
+  ('Dévitalisation Dent','14:30:00', '2024-09-21', 1, 2, TRUE),
+  ('Controle Dent dévitalisé','09:00:00', '2024-09-26', 1, 2, TRUE),
   
   -- Rendez-vous pour Claire
   ('Ophtalmo','09:00:00', '2024-09-22', 3, 4, TRUE),
