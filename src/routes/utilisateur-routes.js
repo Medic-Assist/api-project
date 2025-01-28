@@ -106,6 +106,45 @@ router.post("/personnelMed", async (req, res) => {
   }
 });
 
+// Obtenir un utilisateur par callback
+router.post("/call-utilisateurs", async (req, res) => {
+  const { email, prenom, nom } = req.body;
+  console.log(email, prenom, nom); 
+  console.log(req.body);
+  try {
+    // Vérifier si l'utilisateur Rainbow existe déjà
+    const userRainbowResult = await pool.query(
+      "SELECT U.* FROM UserRainbow UR JOIN Utilisateur U ON UR.idUser = U.idUser WHERE UR.idRainBow = $1",
+      [email]
+    );
+
+    // Si l'utilisateur existe déjà, on retourne ses informations
+    if (userRainbowResult.rows.length > 0) {
+      return res.status(200).json(userRainbowResult.rows[0]);
+    }
+
+    // Si l'utilisateur n'existe pas, insérer les données dans Utilisateur
+    const newUserResult = await pool.query(
+      "INSERT INTO Utilisateur (prenom, nom, numero_tel, role) VALUES ($1, $2, NULL, 'Patient') RETURNING *",
+      [prenom, nom]
+    );
+
+    const newUser = newUserResult.rows[0];
+
+    // Associer l'utilisateur à Rainbow avec son email
+    await pool.query(
+      "INSERT INTO UserRainbow (idRainBow, idUser) VALUES ($1, $2)",
+      [email, newUser.iduser]
+    );
+
+    // Retourner les informations complètes de l'utilisateur
+    return res.status(201).json(newUser);
+  } catch (err) {
+    console.error("Erreur lors du traitement de la requête :", err.message);
+    res.status(500).send("Erreur serveur");
+  }
+});
+
 // Obtenir un utilisateur par ID
 /*
 router.get("/:id", async (req, res) => {

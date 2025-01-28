@@ -171,6 +171,9 @@ VALUES (9,'isabelle.verde@mail.com','1951-09-20', '22', 'Rue des Vosges', 67100,
 INSERT INTO Patient (idUser,mail, date_naissance, numero_rue_principal, rue_principale, codePostal_principal, ville_principale) 
 VALUES (10,'jack.rouge@mail.com','1939-04-21', '20', 'Rue de la Forêt', 67600, 'Sélestat');
 
+-- Insertion id rainbow
+INSERT INTO UserRainbow (idRainBow, idUser) VALUES
+  ('alizeehett@gmail.com', 1);e
 
 -- Insertion des proches dans la table Proche (en utilisant les idUser des proches)
 INSERT INTO Proche (idUser) VALUES
