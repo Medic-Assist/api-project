@@ -173,7 +173,7 @@ VALUES (10,'jack.rouge@mail.com','1939-04-21', '20', 'Rue de la Forêt', 67600, 
 
 -- Insertion id rainbow
 INSERT INTO UserRainbow (idRainBow, idUser) VALUES
-  ('alizeehett@gmail.com', 1);e
+  ('alizeehett@gmail.com', 1);
 
 -- Insertion des proches dans la table Proche (en utilisant les idUser des proches)
 INSERT INTO Proche (idUser) VALUES

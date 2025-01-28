@@ -127,7 +127,7 @@ router.get("/statusTrajet/:id", async (req, res) => {
       return res.status(404).send("Aucun status de trajet trouvé pour ce Rdv");
     }
     res.json(user.rows[0]);
-  } catch (err) {E
+  } catch (err) {
     console.error(err.message);
     res.status(500).send("Server error");
   }
