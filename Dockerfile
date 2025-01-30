@@ -1,5 +1,5 @@
-# Utilise une image Node.js officielle
-FROM node:16
+# Utilise une image Node.js récente pour éviter les problèmes de compatibilité
+FROM node:18
 
 # Définir le répertoire de travail
 WORKDIR /usr/src/app
@@ -8,10 +8,13 @@ WORKDIR /usr/src/app
 COPY package*.json ./
 
 # Installer uniquement les dépendances en mode production
-RUN npm install --only=production
+RUN npm install --omit=dev
 
 # Copier le reste du projet
 COPY . .
+
+# Vérifier si app.js est bien copié
+RUN ls -al /usr/src/app
 
 # Définir les variables d'environnement pour PostgreSQL
 ENV NODE_ENV=production

@@ -6,6 +6,7 @@ const CentreRoutes = require("./routes/centre-routes");
 const path = require("path");
 const app = express();
 const port = 3000;
+require("dotenv").config();
 
 // Middleware pour traiter les requêtes en JSON
 app.use(express.json());
