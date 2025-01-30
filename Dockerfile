@@ -24,4 +24,4 @@ ENV DATABASE_URL=${DATABASE_URL}
 EXPOSE 3000
 
 # Lancer l'application
-CMD ["node", "app.js"]
+CMD ["node", "src/app.js"]
