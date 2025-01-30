@@ -1,20 +1,24 @@
-# Utilise une image de base officielle Node.js
+# Utilise une image Node.js officielle
 FROM node:16
 
-# Crée un répertoire de travail pour l'application
+# Définir le répertoire de travail
 WORKDIR /usr/src/app
 
-# Copier les fichiers package.json et package-lock.json (si présent)
+# Copier uniquement package.json et package-lock.json pour optimiser le cache Docker
 COPY package*.json ./
 
-# Installer les dépendances de l'application (y compris nodemon localement)
-RUN npm install
+# Installer uniquement les dépendances en mode production
+RUN npm install --only=production
 
-# Copier le reste du code de l'application
+# Copier le reste du projet
 COPY . .
 
-# Exposer le port de l'application
+# Définir les variables d'environnement pour PostgreSQL
+ENV NODE_ENV=production
+ENV DATABASE_URL=${DATABASE_URL}
+
+# Exposer le port utilisé par l'application
 EXPOSE 3000
 
-# Utiliser nodemon pour démarrer l'application
-ENTRYPOINT ["npx", "nodemon", "/usr/src/app/app.js"]
+# Lancer l'application
+CMD ["node", "app.js"]
