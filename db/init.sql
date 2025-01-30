@@ -63,6 +63,7 @@ CREATE TABLE IF NOT EXISTS RDV (
   intitule VARCHAR(255),
   horaire TIME NOT NULL,
   dateRDV DATE NOT NULL,
+  idBulleRainbow VARCHAR(255),
   idUser INT,
   idCentreMed INT,
   isADRPrincipale BOOLEAN,
@@ -128,7 +129,7 @@ INSERT INTO Utilisateur (Prenom, nom, role) VALUES
   ('Paul', 'Durand', 'PersonnelMed'),  -- Utilisateur 16 (Personnel Médical, Centre 5 - Hôpital de Hautepierre)
   ('Julie', 'Martin', 'PersonnelMed'),  -- Utilisateur 17 (Personnel Médical, Centre 6 - Strasbourg)
   ('Luc', 'Dubois', 'PersonnelMed');  -- Utilisateur 18 (Personnel Médical, Centre 7 - Sélestat)
-
+('Alizee', 'Hett', 'Patient');  -- Utilisateur 19 (Patient)
 
 -- Insertion des patients
 -- Pour Alice (idUser 1) : Rendez-vous à Sélestat (Centre 7) et Benfeld (Centre 3)
@@ -171,9 +172,13 @@ VALUES (9,'isabelle.verde@mail.com','1951-09-20', '22', 'Rue des Vosges', 67100,
 INSERT INTO Patient (idUser,mail, date_naissance, numero_rue_principal, rue_principale, codePostal_principal, ville_principale) 
 VALUES (10,'jack.rouge@mail.com','1939-04-21', '20', 'Rue de la Forêt', 67600, 'Sélestat');
 
+-- Pour Alizee 
+INSERT INTO Patient (idUser,mail, date_naissance, numero_rue_principal, rue_principale, codePostal_principal, ville_principale)
+VALUES (18,'alizeehett@gmail.com', '1999-09-09', '1', 'Rue de la Gare', 67000, 'Strasbourg');
+
 -- Insertion id rainbow
 INSERT INTO UserRainbow (idRainBow, idUser) VALUES
-  ('alizeehett@gmail.com', 1);
+  ('alizeehett@gmail.com', 18);
 
 -- Insertion des proches dans la table Proche (en utilisant les idUser des proches)
 INSERT INTO Proche (idUser) VALUES
@@ -198,41 +203,41 @@ INSERT INTO PersonnelMed (idUser, idCentreMed) VALUES
   (18, 7);  -- Personnel Médical 5, Centre 7 (Lyon)
 
 -- Insertion des rendez-vous
-INSERT INTO RDV (intitule, horaire, dateRDV, idUser, idCentreMed, isADRPrincipale) VALUES
+INSERT INTO RDV (intitule, horaire, dateRDV, idUser, idBulleRainbow, idCentreMed, isADRPrincipale) VALUES
   -- Rendez-vous pour Alice
-  ('Radio Hanche Droite','10:00:00', '2024-09-20', 1, 7, TRUE),
-  ('Osthéopathie','11:30:00', '2024-09-25', 1, 3, TRUE),
+  ('Radio Hanche Droite','10:00:00', '2024-09-20', 1, 'dsddsd', 7, TRUE),
+  ('Osthéopathie','11:30:00', '2024-09-25', 1, 'dsddsd',3, TRUE),
   
   -- Rendez-vous pour Bob
-  ('Dévitalisation Dent','14:30:00', '2024-09-21', 1, 2, TRUE),
-  ('Controle Dent dévitalisé','09:00:00', '2024-09-26', 1, 2, TRUE),
+  ('Dévitalisation Dent','14:30:00', '2024-09-21', 1,'dsddsd', 2, TRUE),
+  ('Controle Dent dévitalisé','09:00:00', '2024-09-26', 1,'dsddsd', 2, TRUE),
   
   -- Rendez-vous pour Claire
-  ('Ophtalmo','09:00:00', '2024-09-22', 3, 4, TRUE),
-  ('Médecin généraliste','10:30:00', '2024-09-27', 3, 6, TRUE),
+  ('Ophtalmo','09:00:00', '2024-09-22', 3, 'dsddsd',4, TRUE),
+  ('Médecin généraliste','10:30:00', '2024-09-27', 3,'dsddsd', 6, TRUE),
   
   -- Rendez-vous pour David
-  ('Dentiste','11:00:00', '2024-09-23', 4, 2, TRUE),
-  ('Ophtalmo','08:30:00', '2024-09-28', 4, 4, TRUE),
+  ('Dentiste','11:00:00', '2024-09-23', 4, 'dsddsd',2, TRUE),
+  ('Ophtalmo','08:30:00', '2024-09-28', 4,'dsddsd', 4, TRUE),
   
   -- Rendez-vous pour Eve
-  ('RDV Anestésiste','08:30:00', '2024-09-24', 5, 5, TRUE),
-  ('Opération','09:45:00', '2024-09-29', 5, 5, TRUE),
+  ('RDV Anestésiste','08:30:00', '2024-09-24', 5,'dsddsd', 5, TRUE),
+  ('Opération','09:45:00', '2024-09-29', 5,'dsddsd', 5, TRUE),
   
   -- Rendez-vous pour Frank
-  ('Médecin Généraliste','10:00:00', '2024-09-30', 6, 6, TRUE),
+  ('Médecin Généraliste','10:00:00', '2024-09-30', 6,'dsddsd', 6, TRUE),
   
   -- Rendez-vous pour Grace
-  ('Radio épaule gauche','14:00:00', '2024-10-01', 7, 7, TRUE),
+  ('Radio épaule gauche','14:00:00', '2024-10-01', 7, 'dsddsd',7, TRUE),
   
   -- Rendez-vous pour Hugo
-  ('Controle après opération','09:30:00', '2024-10-02', 8, 1, TRUE),
+  ('Controle après opération','09:30:00', '2024-10-02', 8, 'dsddsd',1, TRUE),
   
   -- Rendez-vous pour Isabelle
-  ('RDV Sage femme','11:00:00', '2024-10-03', 9, 5, TRUE),
+  ('RDV Sage femme','11:00:00', '2024-10-03', 9, 'dsddsd',5, TRUE),
   
   -- Rendez-vous pour Jack
-  ('Radio mâchoire','15:30:00', '2024-10-04', 10, 7, TRUE);
+  ('Radio mâchoire','15:30:00', '2024-10-04', 10,'dsddsd', 7, TRUE);
 
 -- Insertion des différents etat possible
 INSERT INTO EtatRDV(intitule) VALUES
