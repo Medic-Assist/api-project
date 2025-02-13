@@ -177,6 +177,18 @@ router.get("/patient/:id", async (req, res) => {
   }
 });
 
+
+// obtenir tous les patient
+router.get("/utilisateurs/patient", async (req, res) => {
+  try {
+    const result = await pool.query("SELECT * FROM Utilisateur U INNER JOIN Patient P ON P.idUser=U.idUser");
+    res.json(result.rows);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send("Server error");
+  }
+});
+
 // Obtenir un proche par ID
 router.get("/proche/:id", async (req, res) => {
   try {

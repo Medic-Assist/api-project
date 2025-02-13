@@ -133,4 +133,32 @@ router.get("/statusTrajet/:id", async (req, res) => {
   }
 });
 
+// Mettre à jour le statut d'un rendez-vous en utilisant une phrase d'état
+router.put("/statusTrajet/:idRDV", async (req, res) => {
+  try {
+    const { idRDV } = req.params;
+    const { intituleEtat } = req.body; // La phrase du statut (ex: "En attente", "Confirmé", etc.)
+
+    // 1️⃣ Récupérer l'ID de l'état correspondant à la phrase donnée
+    const etatResult = await pool.query("SELECT idEtat FROM EtatRDV WHERE intitule = $1", [intituleEtat]);
+
+    if (etatResult.rows.length === 0) {
+      return res.status(404).json({ message: "État non trouvé. Vérifiez la phrase passée." });
+    }
+
+    const idEtat = etatResult.rows[0].idEtat;
+
+    // 2️⃣ Mettre à jour le statut du rendez-vous
+    await pool.query("UPDATE StatusTrajet SET etatRDV = $1 WHERE idRdv = $2", [idEtat, idRDV]);
+
+    res.json({ message: `Statut du rendez-vous ${idRDV} mis à jour avec succès à '${intituleEtat}'` });
+
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({ message: "Erreur serveur lors de la mise à jour du statut du rendez-vous." });
+  }
+});
+
+
 module.exports = router;
+
