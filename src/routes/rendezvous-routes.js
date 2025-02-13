@@ -22,8 +22,8 @@ router.post("/", async (req, res) => {
       [intitule,horaire, dateRDV, idUser, idBulleRainbow, idCentreMed, isADRPrincipale, idDoctor]
     );
 
-    const idRDV = newRDV.rows[0].idRDV;
-        // Assigner le statut initial ("Prévu")
+    const idRDV = parseInt(newRDV.rows[0].idrdv, 10);
+    // Assigner le statut initial ("Prévu")
     await pool.query(
       "INSERT INTO StatusTrajet (idRdv, etatRDV) VALUES ($1, (SELECT idEtat FROM EtatRDV WHERE intitule = 'Prévu'))",
       [idRDV]
