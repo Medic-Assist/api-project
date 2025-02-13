@@ -241,6 +241,7 @@ INSERT INTO RDV (intitule, horaire, dateRDV, idUser, idBulleRainbow, idCentreMed
 
 -- Insertion des différents etat possible
 INSERT INTO EtatRDV(intitule) VALUES
+('Prévu'),
 ('Retard du RDV Possible'),
 ('Patient parti'),
 ('Retard du patient possible'),

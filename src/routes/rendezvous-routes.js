@@ -21,6 +21,14 @@ router.post("/", async (req, res) => {
       "INSERT INTO RDV (intitule,horaire, dateRDV, idUser, idBulleRainbow, idCentreMed, isADRPrincipale) VALUES ($1, $2,$3,$4,$5,$6, $7) RETURNING *",
       [intitule,horaire, dateRDV, idUser, idBulleRainbow, idCentreMed, isADRPrincipale]
     );
+
+    const idRDV = newRDV.rows[0].idRDV;
+        // Assigner le statut initial ("Prévu")
+    await pool.query(
+      "INSERT INTO StatusTrajet (idRdv, etatRDV) VALUES ($1, (SELECT idEtat FROM EtatRDV WHERE intitule = 'Prévu'))",
+      [idRDV]
+    );
+    
     res.json(newRDV.rows[0]);
   } catch (err) {
     console.error(err.message);
@@ -49,7 +57,7 @@ router.put("/:idUser/:idRDV", async (req, res) => {
   try {
     const { idUser,idRDV } = req.params;
     const { horaire, dateRDV } = req.body;
-    await pool.query("UPDATE RDV SET horaire = $1, dateRDV = $2 WHERE idUser = $3 AND idRDV = 1", [
+    await pool.query("UPDATE RDV SET horaire = $1, dateRDV = $2 WHERE idUser = $3 AND idRDV = $4", [
       horaire,
       dateRDV,
       idUser,
@@ -66,7 +74,7 @@ router.put("/:idUser/:idRDV", async (req, res) => {
 router.put("/:idUser", async (req, res) => {
   try {
     const { idUser } = req.params;
-    await pool.query("UPDATE RDV SET isADRPrincipal = FALSE WHERE dateRDV = CURDATE() AND idUser = $1", 
+    await pool.query("UPDATE RDV SET isADRPrincipal = FALSE WHERE dateRDV = CURRENT_DATE() AND idUser = $1", 
       [idUser]
     );
     res.send("Rendez-vous modifié.");
