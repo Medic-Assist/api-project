@@ -142,30 +142,53 @@ router.get("/statusTrajet/:id", async (req, res) => {
 });
 
 // Mettre à jour le statut d'un rendez-vous en utilisant une phrase d'état
+// Mettre à jour le statut d'un rendez-vous en utilisant une phrase d'état
 router.put("/statusTrajet/:idRDV", async (req, res) => {
   try {
+    console.log("🔍 [DEBUG] Requête reçue pour mise à jour du statut");
+
     const { idRDV } = req.params;
     const { intituleEtat } = req.body; // La phrase du statut (ex: "En attente", "Confirmé", etc.)
+
+    console.log(` [DEBUG] idRDV reçu: ${idRDV}`);
+    console.log(` [DEBUG] intituleEtat reçu: ${intituleEtat}`);
+
+    if (!idRDV || !intituleEtat) {
+      console.error(" [ERREUR] Paramètres manquants");
+      return res.status(400).json({ message: "ID du rendez-vous et intitule de l'état sont requis." });
+    }
 
     // 1️⃣ Récupérer l'ID de l'état correspondant à la phrase donnée
     const etatResult = await pool.query("SELECT idEtat FROM EtatRDV WHERE intitule = $1", [intituleEtat]);
 
+    console.log(`🧐 [DEBUG] Résultat de la requête SELECT: ${JSON.stringify(etatResult.rows)}`);
+
     if (etatResult.rows.length === 0) {
+      console.warn(`⚠️ [AVERTISSEMENT] État '${intituleEtat}' non trouvé.`);
       return res.status(404).json({ message: "État non trouvé. Vérifiez la phrase passée." });
     }
 
     const idEtat = etatResult.rows[0].idEtat;
+    console.log(` [DEBUG] ID de l'état trouvé: ${idEtat}`);
 
     // 2️⃣ Mettre à jour le statut du rendez-vous
-    await pool.query("UPDATE StatusTrajet SET etatRDV = $1 WHERE idRdv = $2", [idEtat, idRDV]);
+    const updateResult = await pool.query("UPDATE StatusTrajet SET etatRDV = $1 WHERE idRdv = $2 RETURNING *", [idEtat, idRDV]);
+
+    console.log(`📝 [DEBUG] Résultat de la requête UPDATE: ${JSON.stringify(updateResult.rows)}`);
+
+    if (updateResult.rowCount === 0) {
+      console.warn(` [AVERTISSEMENT] Aucun rendez-vous mis à jour pour idRDV: ${idRDV}`);
+      return res.status(404).json({ message: "Aucun rendez-vous trouvé avec cet ID." });
+    }
 
     res.json({ message: `Statut du rendez-vous ${idRDV} mis à jour avec succès à '${intituleEtat}'` });
 
   } catch (err) {
-    console.error(err.message);
-    res.status(500).json({ message: "Erreur serveur lors de la mise à jour du statut du rendez-vous." });
+    console.error(` [ERREUR] Une exception s'est produite: ${err.message}`);
+    res.status(500).json({ message: "Erreur serveur lors de la mise à jour du statut du rendez-vous.", error: err.message });
   }
 });
+
 
 
 module.exports = router;
