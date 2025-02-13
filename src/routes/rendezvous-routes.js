@@ -143,7 +143,6 @@ router.get("/statusTrajet/:id", async (req, res) => {
 
 // Mettre à jour le statut d'un rendez-vous en utilisant une phrase d'état
 router.put("/statusTrajet/:idRDV", async (req, res) => {
-  try {
 
     let { idRDV } = req.params;
     const { intituleEtat } = req.body;
@@ -172,13 +171,6 @@ router.put("/statusTrajet/:idRDV", async (req, res) => {
 
     res.json({ message: `Statut du rendez-vous ${idRDV} mis à jour avec succès à '${intituleEtat}'` });
 
-  } catch (err) {
-    console.error(`❌ [ERREUR] Une exception s'est produite: ${err.message}`);
-    res.status(500).json({ 
-      message: "Erreur serveur lors de la mise à jour du statut du rendez-vous.", 
-      error: err.message 
-    });
-  }
 });
 
 
