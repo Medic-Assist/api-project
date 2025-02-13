@@ -179,7 +179,7 @@ router.get("/patient/:id", async (req, res) => {
 
 
 // obtenir tous les patient
-router.get("/utilisateurs/patient", async (req, res) => {
+router.get("/patient", async (req, res) => {
   try {
     const result = await pool.query("SELECT * FROM Utilisateur U INNER JOIN Patient P ON P.idUser=U.idUser");
     res.json(result.rows);
