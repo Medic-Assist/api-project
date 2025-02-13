@@ -142,24 +142,34 @@ router.get("/statusTrajet/:id", async (req, res) => {
 });
 
 // Mettre à jour le statut d'un rendez-vous en utilisant une phrase d'état
-// Mettre à jour le statut d'un rendez-vous en utilisant une phrase d'état
 router.put("/statusTrajet/:idRDV", async (req, res) => {
   try {
     console.log("🔍 [DEBUG] Requête reçue pour mise à jour du statut");
 
-    const { idRDV } = req.params;
-    const { intituleEtat } = req.body; // La phrase du statut (ex: "En attente", "Confirmé", etc.)
+    let { idRDV } = req.params;
+    const { intituleEtat } = req.body;
 
-    console.log(` [DEBUG] idRDV reçu: ${idRDV}`);
-    console.log(` [DEBUG] intituleEtat reçu: ${intituleEtat}`);
+    console.log(`📌 [DEBUG] idRDV reçu: ${idRDV}`);
+    console.log(`📌 [DEBUG] intituleEtat reçu: ${intituleEtat}`);
 
+    // Vérification des paramètres
     if (!idRDV || !intituleEtat) {
-      console.error(" [ERREUR] Paramètres manquants");
+      console.error("❌ [ERREUR] Paramètres manquants");
       return res.status(400).json({ message: "ID du rendez-vous et intitule de l'état sont requis." });
     }
 
+    // 🔹 Vérifier et convertir en entier
+    idRDV = parseInt(idRDV, 10);
+    if (isNaN(idRDV)) {
+      console.error("❌ [ERREUR] idRDV n'est pas un entier valide !");
+      return res.status(400).json({ message: "L'ID du rendez-vous doit être un entier valide." });
+    }
+
     // 1️⃣ Récupérer l'ID de l'état correspondant à la phrase donnée
-    const etatResult = await pool.query("SELECT idEtat FROM EtatRDV WHERE intitule = $1", [intituleEtat]);
+    const etatResult = await pool.query(
+      "SELECT idEtat FROM EtatRDV WHERE intitule = $1",
+      [intituleEtat]
+    );
 
     console.log(`🧐 [DEBUG] Résultat de la requête SELECT: ${JSON.stringify(etatResult.rows)}`);
 
@@ -168,26 +178,40 @@ router.put("/statusTrajet/:idRDV", async (req, res) => {
       return res.status(404).json({ message: "État non trouvé. Vérifiez la phrase passée." });
     }
 
-    const idEtat = etatResult.rows[0].idEtat;
-    console.log(` [DEBUG] ID de l'état trouvé: ${idEtat}`);
+    let idEtat = parseInt(etatResult.rows[0].idEtat, 10);
+
+    // 🔹 Vérifier si `idEtat` est bien un entier
+    if (typeof idEtat !== "number") {
+      console.error(`❌ [ERREUR] idEtat (${idEtat}) n'est pas un entier valide !`);
+      return res.status(500).json({ message: "Erreur interne : ID d'état invalide." });
+    }
+
+    console.log(`✅ [DEBUG] ID de l'état trouvé: ${idEtat}`);
 
     // 2️⃣ Mettre à jour le statut du rendez-vous
-    const updateResult = await pool.query("UPDATE StatusTrajet SET etatRDV = $1 WHERE idRdv = $2 RETURNING *", [idEtat, idRDV]);
+    const updateResult = await pool.query(
+      "UPDATE StatusTrajet SET etatRDV = $1 WHERE idRdv = $2 RETURNING *",
+      [idEtat, idRDV]
+    );
 
     console.log(`📝 [DEBUG] Résultat de la requête UPDATE: ${JSON.stringify(updateResult.rows)}`);
 
     if (updateResult.rowCount === 0) {
-      console.warn(` [AVERTISSEMENT] Aucun rendez-vous mis à jour pour idRDV: ${idRDV}`);
+      console.warn(`⚠️ [AVERTISSEMENT] Aucun rendez-vous mis à jour pour idRDV: ${idRDV}`);
       return res.status(404).json({ message: "Aucun rendez-vous trouvé avec cet ID." });
     }
 
     res.json({ message: `Statut du rendez-vous ${idRDV} mis à jour avec succès à '${intituleEtat}'` });
 
   } catch (err) {
-    console.error(` [ERREUR] Une exception s'est produite: ${err.message}`);
-    res.status(500).json({ message: "Erreur serveur lors de la mise à jour du statut du rendez-vous.", error: err.message });
+    console.error(`❌ [ERREUR] Une exception s'est produite: ${err.message}`);
+    res.status(500).json({ 
+      message: "Erreur serveur lors de la mise à jour du statut du rendez-vous.", 
+      error: err.message 
+    });
   }
 });
+
 
 
 
