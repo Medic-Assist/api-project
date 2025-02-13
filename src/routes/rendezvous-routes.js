@@ -142,7 +142,7 @@ router.get("/statusTrajet/:id", async (req, res) => {
 });
 
 // Mettre à jour le statut d'un rendez-vous en utilisant une phrase d'état
-router.put("/statusTrajet/:id", async (req, res) => {
+router.post("/statusTrajet/:id", async (req, res) => {
 
     const { id }= req.params; // 🔥 Convertir en Intege
     const { intituleEtat } = req.body;
