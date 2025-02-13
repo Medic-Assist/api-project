@@ -142,14 +142,11 @@ router.get("/statusTrajet/:id", async (req, res) => {
 });
 
 // Mettre à jour le statut d'un rendez-vous en utilisant une phrase d'état
-router.put("/statusTrajet/:idRDV", async (req, res) => {
+router.put("/statusTrajet/:id", async (req, res) => {
 
-    let { idRDV } = req.params;
+    const { id }= req.params; // 🔥 Convertir en Intege
     const { intituleEtat } = req.body;
 
-
-    // 🔹 Vérifier et convertir en entier
-    idRDV = parseInt(idRDV, 10);
 
 
     // 1️⃣ Récupérer l'ID de l'état correspondant à la phrase donnée
@@ -159,17 +156,15 @@ router.put("/statusTrajet/:idRDV", async (req, res) => {
     );
 
 
-    let idEtat = parseInt(etatResult.rows[0].idEtat, 10);
-
 
     // 2️⃣ Mettre à jour le statut du rendez-vous
     const updateResult = await pool.query(
       "UPDATE StatusTrajet SET etatRDV = $1 WHERE idRdv = $2 RETURNING *",
-      [idEtat, idRDV]
+      [idEtat, id]
     );
 
 
-    res.json({ message: `Statut du rendez-vous ${idRDV} mis à jour avec succès à '${intituleEtat}'` });
+    res.json({ message: `Statut du rendez-vous ${id} mis à jour avec succès à '${intituleEtat}'` });
 
 });
 
