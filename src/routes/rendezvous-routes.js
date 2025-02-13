@@ -16,10 +16,10 @@ router.get("/", async (req, res) => {
 // Ajouter un rendez-vous
 router.post("/", async (req, res) => {
   try {
-    const { intitule,horaire, dateRDV, idUser, idBulleRainbow, idCentreMed, isADRPrincipale } = req.body;
+    const { intitule,horaire, dateRDV, idUser, idBulleRainbow, idCentreMed, isADRPrincipale, idDoctor } = req.body;
     const newRDV = await pool.query(
-      "INSERT INTO RDV (intitule,horaire, dateRDV, idUser, idBulleRainbow, idCentreMed, isADRPrincipale) VALUES ($1, $2,$3,$4,$5,$6, $7) RETURNING *",
-      [intitule,horaire, dateRDV, idUser, idBulleRainbow, idCentreMed, isADRPrincipale]
+      "INSERT INTO RDV (intitule,horaire, dateRDV, idUser, idBulleRainbow, idCentreMed, isADRPrincipale, idDoctor) VALUES ($1, $2,$3,$4,$5,$6, $7,$8) RETURNING *",
+      [intitule,horaire, dateRDV, idUser, idBulleRainbow, idCentreMed, isADRPrincipale, idDoctor]
     );
 
     const idRDV = newRDV.rows[0].idRDV;
@@ -28,7 +28,7 @@ router.post("/", async (req, res) => {
       "INSERT INTO StatusTrajet (idRdv, etatRDV) VALUES ($1, (SELECT idEtat FROM EtatRDV WHERE intitule = 'Prévu'))",
       [idRDV]
     );
-    
+
     res.json(newRDV.rows[0]);
   } catch (err) {
     console.error(err.message);

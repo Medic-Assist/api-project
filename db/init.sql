@@ -203,7 +203,7 @@ INSERT INTO PersonnelMed (idUser, idCentreMed) VALUES
   (18, 7);  -- Personnel Médical 5, Centre 7 (Lyon)
 
 -- Insertion des rendez-vous
-INSERT INTO RDV (intitule, horaire, dateRDV, idUser, idBulleRainbow, idCentreMed, isADRPrincipale) VALUES
+INSERT INTO RDV (intitule, horaire, dateRDV, idUser, idBulleRainbow, idCentreMed, isADRPrincipale, idDoctor) VALUES
   -- Rendez-vous pour Alice
   ('Radio Hanche Droite','10:00:00', '2024-09-20', 1, 'dsddsd', 7, TRUE),
   ('Osthéopathie','11:30:00', '2024-09-25', 1, 'dsddsd',3, TRUE),
