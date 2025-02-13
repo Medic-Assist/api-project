@@ -3,6 +3,7 @@ const pool = require("./db");
 const utilisateurRoutes = require("./routes/utilisateur-routes");
 const RDVRoutes = require("./routes/rendezvous-routes");
 const CentreRoutes = require("./routes/centre-routes");
+const StatusRoutes = require("./routes/status-trajet");
 const path = require("path");
 const app = express();
 const port = 3000;
@@ -15,6 +16,7 @@ app.use(express.json());
 app.use("/api/utilisateurs", utilisateurRoutes);
 app.use("/api/rendezvous", RDVRoutes);
 app.use("/api/centres", CentreRoutes);
+app.use("/api/status", StatusRoutes);
 
 app.use(express.static(path.join(__dirname, "../public")));
 
